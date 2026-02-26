@@ -85,30 +85,31 @@ async function generarPDF() {
         width: element.style.width,
         minWidth: element.style.minWidth,
         maxWidth: element.style.maxWidth,
-        position: element.style.position,
         overflow: element.style.overflow
     };
 
-    // Forzar tamaño exacto para captura
+    // Forzar tamaño fijo para captura completa
     element.style.width = '750px';
     element.style.minWidth = '750px';
     element.style.maxWidth = '750px';
     element.style.overflow = 'visible';
 
-    // Pequeña pausa para que el browser re-renderice
-    await new Promise(r => setTimeout(r, 100));
+    // Pausa para que el browser re-renderice
+    await new Promise(r => setTimeout(r, 150));
+
+    // Usar scrollHeight para capturar TODA la altura incluyendo el total
+    const captureWidth = element.scrollWidth;
+    const captureHeight = element.scrollHeight;
 
     const canvas = await html2canvas(element, {
         scale: 2,
         backgroundColor: "#1A202C",
         useCORS: true,
         allowTaint: true,
-        width: element.offsetWidth,
-        height: element.offsetHeight,
-        scrollX: -window.scrollX,
-        scrollY: -window.scrollY,
+        width: captureWidth,
+        height: captureHeight,
         windowWidth: 750,
-        windowHeight: element.offsetHeight
+        windowHeight: captureHeight
     });
 
     // Restaurar estilos
@@ -118,8 +119,8 @@ async function generarPDF() {
     const imgData = canvas.toDataURL('image/png');
     const { jsPDF } = window.jspdf;
 
-    // El PDF tiene exactamente el mismo aspect ratio que el canvas → sin espacios blancos
-    const pdfWidth = 210;  // mm
+    // PDF con aspect ratio exacto del canvas → cero espacio blanco
+    const pdfWidth = 210;
     const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
 
     const pdf = new jsPDF({
