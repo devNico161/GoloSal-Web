@@ -3,7 +3,8 @@ let productos = [];
 // Iniciar fecha y Nro factura
 function inicializar() {
     document.getElementById('res-fecha').innerText = new Date().toLocaleDateString();
-    document.getElementById('res-nro').innerText = 'F-' + Math.floor(Math.random() * 90000 + 10000);
+    const nro = Math.floor(Math.random() * 90000 + 10000);
+    document.getElementById('res-nro').innerText = 'F-' + nro;
 }
 inicializar();
 
@@ -21,7 +22,7 @@ function agregarProducto() {
     if (desc && cant > 0 && precio > 0) {
         productos.push({ id: Date.now(), cant, desc, precio, subtotal: cant * precio });
         actualizarTabla();
-        
+
         document.getElementById('prodDesc').value = "";
         document.getElementById('prodCant').value = "";
         document.getElementById('prodPrecio').value = "";
@@ -55,7 +56,7 @@ function actualizarTabla() {
         `;
     });
 
-    for(let i = productos.length; i < 8; i++) {
+    for (let i = productos.length; i < 8; i++) {
         tabla.innerHTML += `<tr><td>&nbsp;</td><td></td><td></td><td></td><td class="no-print-column"></td></tr>`;
     }
 
@@ -63,7 +64,7 @@ function actualizarTabla() {
 }
 
 function nuevaVenta() {
-    if(confirm("¿Deseas iniciar una nueva venta? Se borrará todo.")) {
+    if (confirm("¿Deseas iniciar una nueva venta? Se borrará todo.")) {
         productos = [];
         document.getElementById('clienteNombre').value = "";
         document.getElementById('clienteEmpresa').value = "";
@@ -81,14 +82,14 @@ async function generarPDF() {
     const cols = document.querySelectorAll('.no-print-column');
     cols.forEach(c => c.style.display = 'none');
 
-    // Forzar ancho fijo para que el recibo se capture completo sin importar el tamaño de pantalla
+    // Forzar ancho fijo tipo desktop para captura correcta
     const anchoOriginal = element.style.width;
     const minWidthOriginal = element.style.minWidth;
-    element.style.width = '794px';       // Ancho A4 en píxeles a 96dpi
+    element.style.width = '794px';
     element.style.minWidth = '794px';
 
     html2canvas(element, {
-        scale: 2,
+        scale: 3,
         backgroundColor: "#1A202C",
         width: 794,
         windowWidth: 794,
@@ -96,31 +97,26 @@ async function generarPDF() {
         scrollX: 0,
         scrollY: 0
     }).then(canvas => {
-        // Restaurar estilos originales
+        // Restaurar estilos
         element.style.width = anchoOriginal;
         element.style.minWidth = minWidthOriginal;
         cols.forEach(c => c.style.display = 'table-cell');
 
         const imgData = canvas.toDataURL('image/png');
         const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'mm', 'a4');
 
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 10;
-        const imgWidth = pageWidth - margin * 2;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        // Página con el tamaño exacto del recibo = sin márgenes blancos
+        const pdfWidth = 210; // A4 ancho en mm
+        const pdfHeight = Math.round((canvas.height * pdfWidth) / canvas.width);
 
-        // Si el recibo es más alto que la página, lo escala para que entre todo
-        let finalHeight = imgHeight;
-        let finalWidth = imgWidth;
-        if (imgHeight > pageHeight - margin * 2) {
-            finalHeight = pageHeight - margin * 2;
-            finalWidth = (canvas.width * finalHeight) / canvas.height;
-        }
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: [pdfWidth, pdfHeight]
+        });
 
-        const offsetX = (pageWidth - finalWidth) / 2;
-        pdf.addImage(imgData, 'PNG', offsetX, margin, finalWidth, finalHeight);
+        // Imagen ocupa 100% de la página, sin márgenes
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save(`Recibo_GoloSal_${Date.now()}.pdf`);
     });
 }
