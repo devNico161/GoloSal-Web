@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoloSal - Panel de Ventas Dark</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="IMG/LOGO.png" alt="GoloSal Logo" class="main-logo">
+        </div>
+        <h1 class="panel-title">Panel de Ventas</h1>
+    </header>
+
+    <main class="container">
+        <section class="form-section">
+            <div class="header-form">
+                <h3 class="section-title">Datos del Cliente</h3>
+                <button onclick="nuevaVenta()" class="btn-clear">🧹 Nueva Venta</button>
+            </div>
+            
+            <div class="grid-input">
+                <input type="text" id="clienteNombre" placeholder="Nombre del Cliente" onkeyup="updateClientInfo()">
+                <input type="text" id="clienteEmpresa" placeholder="Nombre del Negocio" onkeyup="updateClientInfo()">
+                <input type="text" id="clienteDireccion" placeholder="Dirección" onkeyup="updateClientInfo()">
+            </div>
+
+            <h3 class="section-title">Agregar Productos</h3>
+            <div class="product-input">
+                <input type="text" id="prodDesc" placeholder="Descripción del producto">
+                <input type="number" id="prodCant" placeholder="Cant.">
+                <input type="number" id="prodPrecio" placeholder="Precio Unit.">
+                <button onclick="agregarProducto()" class="btn-add">Añadir</button>
+            </div>
+
+            <button onclick="generarPDF()" class="btn-generate">📥 Descargar PDF Recibo</button>
+        </section>
+
+        <hr class="separator">
+
+        <div id="recibo-template" class="receipt-box">
+            <div class="receipt-header">
+                <div class="company-info">
+                    <img src="IMG/LOGO.png" alt="Logo GoloSal">
+                    <p><strong>GoloSal</strong></p>
+                    <p>Nombre y Apellido del Dueño (Fabian)</p>
+                    <p>Telefono del Dueño</p>
+                </div>
+                <div class="receipt-meta">
+                    <div class="meta-box"><strong>Nro Factura:</strong> <span id="res-nro"></span></div>
+                    <div class="meta-box"><strong>Fecha:</strong> <span id="res-fecha"></span></div>
+                </div>
+            </div>
+
+            <div class="client-info-display">
+                <h4>DATOS DEL CLIENTE</h4>
+                <p><strong>Cliente:</strong> <span id="res-cliente"></span></p>
+                <p><strong>Negocio:</strong> <span id="res-negocio"></span></p>
+                <p><strong>Dirección:</strong> <span id="res-dir"></span></p>
+            </div>
+
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>CANTIDAD</th>
+                        <th>DESCRIPCION</th>
+                        <th>Precio Unit</th>
+                        <th>SubTotal</th>
+                        <th class="no-print-column">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-items">
+                    </tbody>
+            </table>
+
+            <div class="total-section">
+                <div class="total-label">Total A Pagar</div>
+                <div class="total-amount" id="res-total">$ 0.00</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
