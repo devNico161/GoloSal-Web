@@ -7,64 +7,161 @@
     --texto-claro: #E2E8F0;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #0F172A; /* Fondo más oscuro aún */
-    margin: 0; padding: 20px; color: var(--texto-claro);
+    background-color: #0F172A;
+    margin: 0;
+    padding: 12px;
+    color: var(--texto-claro);
 }
 
 header { text-align: center; margin-bottom: 20px; }
-.logo-container {padding: 10px; border-radius: 20px; display: inline-block; }
-.main-logo { width: 300px; }
-.panel-title { color: white; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 2px; }
+.logo-container { padding: 10px; border-radius: 20px; display: inline-block; }
+.main-logo { width: 220px; max-width: 80vw; }
+.panel-title { color: white; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 2px; margin: 8px 0; }
 
 .container {
-    max-width: 850px; margin: auto; background: var(--gris-oscuro);
-    padding: 25px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    max-width: 850px;
+    margin: auto;
+    background: var(--gris-oscuro);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
-.header-form { display: flex; justify-content: space-between; align-items: center; }
-.section-title { color: var(--naranja-golo); border-left: 5px solid var(--rojo-golo); padding-left: 10px; }
+.header-form { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.section-title { color: var(--naranja-golo); border-left: 5px solid var(--rojo-golo); padding-left: 10px; margin: 15px 0 10px; font-size: 1rem; }
 
-.grid-input, .product-input { display: grid; gap: 15px; margin-bottom: 20px; }
+.grid-input, .product-input { display: grid; gap: 10px; margin-bottom: 20px; }
 .grid-input { grid-template-columns: 1fr 1fr 1fr; }
 .product-input { grid-template-columns: 3fr 1fr 1fr 1fr; }
 
 input {
-    padding: 12px; border-radius: 8px; border: 1px solid #4A5568;
-    background: #1A202C; color: white; outline: none; transition: 0.3s;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #4A5568;
+    background: #1A202C;
+    color: white;
+    outline: none;
+    transition: 0.3s;
+    width: 100%;
+    font-size: 0.95rem;
 }
 input:focus { border-color: var(--naranja-golo); box-shadow: 0 0 8px rgba(247, 148, 30, 0.4); }
 
-button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; transition: 0.3s; padding: 10px 14px; }
 .btn-add { background: var(--azul-golo); color: white; }
-.btn-generate { background: var(--rojo-golo); color: white; width: 100%; padding: 18px; font-size: 1.2rem; margin-top: 15px; }
-.btn-clear { background: #4A5568; color: white; padding: 10px 15px; }
+.btn-generate { background: var(--rojo-golo); color: white; width: 100%; padding: 16px; font-size: 1.1rem; margin-top: 15px; }
+.btn-clear { background: #4A5568; color: white; padding: 10px 15px; white-space: nowrap; }
 .btn-delete { background: #ff4757; color: white; padding: 5px 8px; font-size: 0.8rem; }
 
 button:hover { filter: brightness(1.2); transform: translateY(-2px); }
 
-.separator { border: 0; border-top: 2px dashed #4A5568; margin: 40px 0; }
+.separator { border: 0; border-top: 2px dashed #4A5568; margin: 30px 0; }
 
-/* ESTILO DEL RECIBO OSCURO */
+/* RECIBO */
 .receipt-box {
-    background: var(--azul-oscuro); color: white; border: 3px solid #000; overflow: hidden;
+    background: var(--azul-oscuro);
+    color: white;
+    border: 3px solid #000;
+    overflow: hidden;
+    width: 100%;
 }
 
 .receipt-header { display: flex; border-bottom: 3px solid #000; background: var(--rojo-golo); }
-.company-info { width: 45%; padding: 15px; border-right: 3px solid #000; text-align: center; }
-.company-info img { width: 110px; margin-bottom: 5px; }
+.company-info { width: 45%; padding: 12px; border-right: 3px solid #000; text-align: center; }
+.company-info img { width: 90px; margin-bottom: 5px; }
+.company-info p { margin: 3px 0; font-size: 0.85rem; }
 .receipt-meta { width: 55%; display: flex; flex-direction: column; background: var(--naranja-golo); color: black; }
-.meta-box { padding: 12px; border-bottom: 3px solid #000; height: 50%; font-weight: bold; }
+.meta-box { padding: 10px 12px; border-bottom: 3px solid #000; height: 50%; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
 .meta-box:last-child { border-bottom: none; }
 
-.client-info-display { padding: 20px; border-bottom: 3px solid #000; background: #2D3748; }
-.client-info-display h4 { margin: 0 0 10px 0; color: var(--naranja-golo); text-decoration: underline; }
+.client-info-display { padding: 15px; border-bottom: 3px solid #000; background: #2D3748; }
+.client-info-display h4 { margin: 0 0 8px 0; color: var(--naranja-golo); text-decoration: underline; font-size: 0.9rem; }
+.client-info-display p { margin: 4px 0; font-size: 0.85rem; }
 
-.receipt-table { width: 100%; border-collapse: collapse; min-height: 300px; background: #1A202C; }
-.receipt-table th { background: var(--azul-golo); border-bottom: 3px solid #000; padding: 12px; color: white; }
-.receipt-table td { padding: 12px; border-right: 1px solid #2D3748; text-align: center; border-bottom: 1px solid #2D3748; }
+.receipt-table { width: 100%; border-collapse: collapse; background: #1A202C; }
+.receipt-table th { background: var(--azul-golo); border-bottom: 3px solid #000; padding: 10px 6px; color: white; font-size: 0.8rem; }
+.receipt-table td { padding: 10px 6px; border-right: 1px solid #2D3748; text-align: center; border-bottom: 1px solid #2D3748; font-size: 0.85rem; }
 
 .total-section { display: flex; border-top: 3px solid #000; background: var(--rojo-golo); }
-.total-label { width: 75%; text-align: right; padding: 15px; font-weight: bold; font-size: 1.2rem; }
-.total-amount { width: 25%; text-align: center; padding: 15px; font-weight: bold; background: var(--naranja-golo); color: black; font-size: 1.3rem; }
+.total-label { width: 70%; text-align: right; padding: 14px; font-weight: bold; font-size: 1rem; }
+.total-amount { width: 30%; text-align: center; padding: 14px; font-weight: bold; background: var(--naranja-golo); color: black; font-size: 1.1rem; }
+
+/* =====================
+   RESPONSIVE MÓVIL
+   ===================== */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 8px;
+    }
+
+    .main-logo { width: 160px; }
+    .panel-title { font-size: 1.2rem; letter-spacing: 1px; }
+
+    .container {
+        padding: 14px;
+        border-radius: 10px;
+    }
+
+    /* Inputs del cliente: una columna */
+    .grid-input {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    /* Inputs de producto: reorganizados */
+    .product-input {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    /* La descripción ocupa toda la fila */
+    .product-input input:first-child {
+        grid-column: 1 / -1;
+    }
+
+    /* El botón añadir ocupa toda la fila */
+    .product-input .btn-add {
+        grid-column: 1 / -1;
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .btn-generate {
+        font-size: 1rem;
+        padding: 14px;
+    }
+
+    /* Recibo */
+    .company-info img { width: 70px; }
+    .company-info p { font-size: 0.75rem; }
+    .meta-box { font-size: 0.75rem; padding: 8px 10px; }
+
+    .client-info-display { padding: 10px; }
+    .client-info-display p { font-size: 0.8rem; }
+
+    .receipt-table th { 
+        font-size: 0.7rem; 
+        padding: 8px 4px; 
+    }
+    .receipt-table td { 
+        font-size: 0.78rem; 
+        padding: 8px 4px; 
+    }
+
+    .total-label { font-size: 0.9rem; padding: 12px 10px; }
+    .total-amount { font-size: 0.95rem; padding: 12px 8px; }
+}
+
+@media (max-width: 380px) {
+    .panel-title { font-size: 1rem; }
+    .receipt-table th, .receipt-table td { font-size: 0.65rem; padding: 6px 3px; }
+    .total-label, .total-amount { font-size: 0.85rem; padding: 10px 6px; }
+}
