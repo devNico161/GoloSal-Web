@@ -2,7 +2,10 @@ let productos = [];
 
 function inicializar() {
     document.getElementById('res-fecha').innerText = new Date().toLocaleDateString();
-    const nro = Math.floor(Math.random() * 90000 + 10000);
+    // Combina timestamp con random para garantizar unicidad real
+    const timestamp = Date.now() % 1000000; // últimos 6 dígitos del timestamp
+    const rand = Math.floor(Math.random() * 900 + 100); // 3 dígitos random
+    const nro = String(timestamp).padStart(6, '0') + '-' + rand;
     document.getElementById('res-nro').innerText = 'F-' + nro;
 }
 inicializar();
@@ -125,8 +128,8 @@ async function generarPDF() {
             <div style="width:45%;background:#C31E2E;padding:15px;border-right:3px solid #000;text-align:center;">
                 <img src="${logoBase64}" style="width:110px;margin-bottom:8px;"><br>
                 <strong>GoloSal</strong><br>
-                <span style="font-size:13px;">Fabian Guzmán Stisman</span><br>
-                <span style="font-size:13px;">381 603-2347</span>
+                <span style="font-size:13px;">Nombre y Apellido del Dueño (Fabian)</span><br>
+                <span style="font-size:13px;">Telefono del Dueño</span>
             </div>
             <div style="width:55%;display:flex;flex-direction:column;background:#F7941E;color:black;">
                 <div style="padding:20px 15px;border-bottom:3px solid #000;font-weight:bold;font-size:15px;flex:1;display:flex;align-items:center;">
