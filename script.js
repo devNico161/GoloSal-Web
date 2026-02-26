@@ -1,6 +1,5 @@
 let productos = [];
 
-// Iniciar fecha y Nro factura
 function inicializar() {
     document.getElementById('res-fecha').innerText = new Date().toLocaleDateString();
     const nro = Math.floor(Math.random() * 90000 + 10000);
@@ -22,7 +21,6 @@ function agregarProducto() {
     if (desc && cant > 0 && precio > 0) {
         productos.push({ id: Date.now(), cant, desc, precio, subtotal: cant * precio });
         actualizarTabla();
-
         document.getElementById('prodDesc').value = "";
         document.getElementById('prodCant').value = "";
         document.getElementById('prodPrecio').value = "";
@@ -82,41 +80,54 @@ async function generarPDF() {
     const cols = document.querySelectorAll('.no-print-column');
     cols.forEach(c => c.style.display = 'none');
 
-    // Forzar ancho fijo tipo desktop para captura correcta
-    const anchoOriginal = element.style.width;
-    const minWidthOriginal = element.style.minWidth;
-    element.style.width = '794px';
-    element.style.minWidth = '794px';
+    // Guardar estilos originales
+    const originalStyles = {
+        width: element.style.width,
+        minWidth: element.style.minWidth,
+        maxWidth: element.style.maxWidth,
+        position: element.style.position,
+        overflow: element.style.overflow
+    };
 
-    html2canvas(element, {
-        scale: 3,
+    // Forzar tamaño exacto para captura
+    element.style.width = '750px';
+    element.style.minWidth = '750px';
+    element.style.maxWidth = '750px';
+    element.style.overflow = 'visible';
+
+    // Pequeña pausa para que el browser re-renderice
+    await new Promise(r => setTimeout(r, 100));
+
+    const canvas = await html2canvas(element, {
+        scale: 2,
         backgroundColor: "#1A202C",
-        width: 794,
-        windowWidth: 794,
         useCORS: true,
-        scrollX: 0,
-        scrollY: 0
-    }).then(canvas => {
-        // Restaurar estilos
-        element.style.width = anchoOriginal;
-        element.style.minWidth = minWidthOriginal;
-        cols.forEach(c => c.style.display = 'table-cell');
-
-        const imgData = canvas.toDataURL('image/png');
-        const { jsPDF } = window.jspdf;
-
-        // Página con el tamaño exacto del recibo = sin márgenes blancos
-        const pdfWidth = 210; // A4 ancho en mm
-        const pdfHeight = Math.round((canvas.height * pdfWidth) / canvas.width);
-
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: [pdfWidth, pdfHeight]
-        });
-
-        // Imagen ocupa 100% de la página, sin márgenes
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`Recibo_GoloSal_${Date.now()}.pdf`);
+        allowTaint: true,
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+        scrollX: -window.scrollX,
+        scrollY: -window.scrollY,
+        windowWidth: 750,
+        windowHeight: element.offsetHeight
     });
+
+    // Restaurar estilos
+    Object.assign(element.style, originalStyles);
+    cols.forEach(c => c.style.display = 'table-cell');
+
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+
+    // El PDF tiene exactamente el mismo aspect ratio que el canvas → sin espacios blancos
+    const pdfWidth = 210;  // mm
+    const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
+
+    const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight]
+    });
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`Recibo_GoloSal_${Date.now()}.pdf`);
 }
